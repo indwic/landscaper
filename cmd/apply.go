@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"time"
 
 	"github.com/eneco/landscaper/pkg/landscaper"
@@ -54,6 +55,8 @@ var addCmd = &cobra.Command{
 		executor := landscaper.NewExecutor(env.HelmClient(), env.ChartLoader, kubeSecrets, env.DryRun, env.Wait, int64(env.WaitTimeout/time.Second), env.DisabledStages)
 
 		for {
+			updateHelmRepo()
+
 			desired, err := fileState.Components()
 			if err != nil {
 				logrus.WithFields(logrus.Fields{"error": err}).Error("Loading desired state failed")
@@ -85,6 +88,25 @@ var addCmd = &cobra.Command{
 
 		return nil
 	},
+}
+
+func updateHelmRepo() {
+	logrus.WithFields(logrus.Fields{"cmd": "helm repo update"}).Info("Update helm repo")
+	var (
+		cmdOut []byte
+		errCmd error
+	)
+
+	cmd := "helm"
+	args := []string{"repo", "update"}
+
+	if cmdOut, errCmd = exec.Command(cmd, args...).Output(); errCmd != nil {
+		logrus.Warning("There was an error running helm repo update command: ", errCmd)
+	} else {
+		cmdRes := string(cmdOut)
+		logrus.Info(cmdRes)
+		logrus.Info("Helm repo updated")
+	}
 }
 
 func init() {
