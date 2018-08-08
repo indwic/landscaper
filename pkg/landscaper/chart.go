@@ -72,7 +72,7 @@ func locateChartPath(homePath, chartRef string) (string, error) {
 	}
 
 	// ResolveChartVersion provides us through the repo index an url from which we can obtain the filename chart.tgz
-	url, _, err := dl.ResolveChartVersion(name, version)
+	url, _, err := dl.ResolveChartVersion(name, version, true)
 	if err != nil {
 		return "", fmt.Errorf("cannot resolve chartversion: %s", err)
 	}
