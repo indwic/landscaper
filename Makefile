@@ -21,6 +21,9 @@ bootstrap:
 	dep ensure
 	./scripts/setup-apimachinery.sh
 
+patch:
+	patch -p0 < scripts/chart_downloader.go.patch
+
 clean:
 	rm -rf $(BUILD_DIR)
 

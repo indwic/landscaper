@@ -1,12 +1,12 @@
---- helm/pkg/downloader/chart_downloader.go	2018-08-07 23:18:34.000000000 +0700
-+++ helm/pkg/downloader/chart_downloader-new.go	2018-08-08 00:48:27.000000000 +0700
+--- vendor/k8s.io/helm/pkg/downloader/chart_downloader.go	2018-08-07 23:18:34.000000000 +0700
++++ vendor/k8s.io/helm/pkg/downloader/chart_downloader-new.go	2018-08-08 00:48:27.000000000 +0700
 @@ -23,6 +23,7 @@
  	"net/url"
  	"os"
  	"path/filepath"
 +	"regexp"
  	"strings"
- 
+
  	"k8s.io/helm/pkg/getter"
 @@ -81,7 +82,7 @@
  // Returns a string path to the location where the file was downloaded and a verification
@@ -35,7 +35,7 @@
 @@ -215,6 +222,14 @@
  		return u, r.Client, fmt.Errorf("invalid chart URL format: %s", ref)
  	}
- 
+
 +	// Force rewrite with specified version
 +	if force_version_opt && version != "" {
 +		strPathChartFileName := u.Path
