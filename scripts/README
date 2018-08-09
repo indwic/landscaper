@@ -1,2 +1,0 @@
-For force version apply chart_downloader.go.patch to helm
-helm/pkg/downloader/chart_downloader.go
